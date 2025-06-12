@@ -1,0 +1,54 @@
+.weatherDetails {
+    padding: 20px;
+    border-radius: 8px;
+    color: var(--text-color);
+    text-align: left;
+    width: 100%;
+    margin: 20px auto 0;
+    background: var(--background-color);
+    font-size: 14px;
+    animation: gradientFlow 15s ease infinite;
+    background-size: 400% 400%;
+
+    h3 {
+        font-size: 22px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin: 10px 0;
+    }
+
+    img {
+        display: block;
+        margin: 20px auto 0;
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
+    }
+
+    &.fullWidthBlock {
+        max-width: 600px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .forecastCard {
+        width: 200px !important;
+    }
+}
+
+@keyframes gradientFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
