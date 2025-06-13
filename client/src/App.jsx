@@ -32,7 +32,7 @@ function App() {
             setIsWeeklyDataLoading(true);
             try {
                 const res = await axios.get(
-                    `http://localhost:5125/weather-forecast`
+                    `https://liyaemmy.onrender.com/weather-forecast`
                 );
 
                 if (res.status === 200) {
@@ -80,7 +80,7 @@ function App() {
         setWeather(null);
         try {
             const response = await axios.get(
-                `http://localhost:5125/weather/${city}`
+                `https://liyaemmy.onrender.com/weather/${city}`
             );
             if (response.status === 200 && response.data) {
                 const data = response.data;
@@ -117,7 +117,7 @@ function App() {
         setForecast(null);
         try {
             const response = await axios.get(
-                `http://localhost:5125/forecast-5days/${city}`
+                `https://liyaemmy.onrender.com/forecast-5days/${city}`
             );
             if (response.status === 200 && response.data) {
                 const extractedForecast = response.data.forecast.map((entry) => ({
