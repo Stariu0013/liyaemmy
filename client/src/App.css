@@ -15,7 +15,7 @@
     --input-focus-shadow: rgba(255, 213, 79, 0.5);
     --card-bg: #45276a;
     --card-border: #7e57c2;
-    --navbar-bg: rgba(90, 42, 130, 0.8);
+    --navbar-bg: rgba(90, 42, 130, 1);
     --button-bg: linear-gradient(160deg, #6B4DBE, #8264C7, #9B84E1, #C0ACE8);
     --button-text: white;
     --button-hover-bg: linear-gradient(145deg, #FFCA28, #FFA000);
@@ -31,7 +31,7 @@
     --input-focus-shadow: rgba(212, 164, 55, 0.5);
     --card-bg: #E4B169;
     --card-border: #C19A38;
-    --navbar-bg: rgba(242, 193, 78, 0.9);
+    --navbar-bg: rgba(242, 193, 78, 1);
     --button-bg: linear-gradient(145deg, #DAA520, #F2C14E);
     --button-text: black;
     --button-hover-bg: linear-gradient(160deg, #6B4DBE, #8264C7, #9B84E1, #C0ACE8);
@@ -182,6 +182,7 @@ textarea:focus {
 }
 #root .slick-next,
 #root .slick-prev {
+    padding-top: 2px;
     background-color: #512da8 !important;
     border: none !important;
     color: #d1c4e9 !important;
@@ -318,6 +319,7 @@ button:active {
     color: var(--text-color);
 }
 .navbar {
+    background-color: var(--navbar-bg);
     padding: 10px 20px;
     position: fixed;
     top: 0;
@@ -461,6 +463,7 @@ button:active {
 }
 .tabs-content-wrapper .content.active {
     display: flex;
+    flex-direction: column;
     opacity: 1;
     transform: translateY(0);
     position: relative;

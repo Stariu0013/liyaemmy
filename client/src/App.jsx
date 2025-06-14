@@ -58,7 +58,7 @@ function App() {
         setWeather(null);
         try {
             const response = await axios.get(
-                `https://liyaemmy.onrender.com/weather/${city}`
+                `http://localhost:5125/weather/${city}`
             );
 
             if (response.status === 200 && response.data) {
@@ -96,7 +96,7 @@ function App() {
         setIsWeeklyDataLoading(true);
         try {
             const res = await axios.get(
-                `https://liyaemmy.onrender.com/weather-forecast`
+                `http://localhost:5125/weather-forecast`
             );
             if (res.status === 200) {
                 setForecast(res.data.forecasts);
@@ -115,7 +115,7 @@ function App() {
         setForecast(null);
         try {
             const response = await axios.get(
-                `https://liyaemmy.onrender.com/forecast-5days/${city}`
+                `http://localhost:5125/forecast-5days/${city}`
             );
             if (response.status === 200 && response.data) {
                 const extractedForecast = response.data.forecast.map((entry) => ({
@@ -137,8 +137,15 @@ function App() {
         }
     };
     const handleSearch = () => {
+        if (parseFloat(city)) {
+            setWeather(null);
+            setForecast(null);
+            setError(t`invalidCity`);
+            return;
+        }
+
         async function handleForecast() {
-            if (city.toLowerCase() === "kyiv") {
+            if (city.toLowerCase() === "kyiv" || city.toLowerCase() === "київ") {
                 await fetchWeather();
                 await fetchDataForKiev();
             } else {
@@ -149,11 +156,6 @@ function App() {
 
         handleForecast();
     };
-
-    console.log({
-        weather,
-        forecast
-    });
 
     return (
         <div className={`app ${theme}`}>

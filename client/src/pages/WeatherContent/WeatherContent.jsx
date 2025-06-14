@@ -59,7 +59,7 @@ export const WeatherContent = ({ weather, isLoading, error, forecast, activeTab,
                     <p>{t("feelsLike", { value: Math.floor(avgFeelsLike) })}</p>
                     <p>{t("humidity", { value: Math.floor(avgHumidity) })}</p>
                     <p>{t("windSpeed", { value: Math.floor(avgWindSpeed) })}</p>
-                    <p>{t("precipitationProbability", { value: `${(avgPrecipitation * 100).toFixed(2)}%` })}</p>
+                    <p>{t("precipitationProbability", { value: `${ avgPrecipitation * 100 > 100 ? 100 : (avgPrecipitation * 100).toFixed(0)}%` })}</p>
 
                     <h3>{t("hourlyForecast")}</h3>
                 </div>
@@ -75,7 +75,7 @@ export const WeatherContent = ({ weather, isLoading, error, forecast, activeTab,
                             <div>{t("conditions", { description: entry.weather?.description })}</div>
                             <div>{t("humidity", { value: entry.humidity })}</div>
                             <div>{t("windSpeed", { value: entry.wind.speed })}</div>
-                            <div>{t("precipitationProbability", { value: `${(entry.rain || 0) * 100}%` })}</div>
+                            <div>{t("precipitationProbability", { value: `${((entry.rain || 0) * 100) > 100 ? 100 : ((entry.rain || 0) * 100).toFixed(0)}%` })}</div>
                         </div>
                     ))}
                 </Slider>

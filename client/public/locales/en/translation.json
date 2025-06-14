@@ -35,5 +35,6 @@
   "notFoundHomeLink": "Go to Homepage",
   "noDataAvailable": "No data available for this date.",
   "weatherDetailsFor": "Weather Details for {{date}}",
-  "weather": "Weather"
+  "weather": "Weather",
+  "invalidCity": "Enter valid city name"
 }

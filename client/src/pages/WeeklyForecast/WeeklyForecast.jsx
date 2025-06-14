@@ -10,42 +10,52 @@ const WeeklyWeather = ({ forecast }) => {
 
     const normalizeForecastData = (data) => {
         if (data && Array.isArray(data) && data[0]?.dt) {
+            const today = new Date().toLocaleDateString();
+
             return data.reduce((acc, current) => {
                 const date = new Date(current.dt * 1000).toLocaleDateString();
-                if (!acc[date]) acc[date] = [];
-                acc[date].push(current);
+
+                if (date !== today) {
+                    if (!acc[date]) acc[date] = [];
+                    acc[date].push(current);
+                }
                 return acc;
             }, {});
         }
 
         if (data && Array.isArray(data)) {
-            return data.reduce((acc, current) => {
-                const {
-                    date,
-                    temperature_3h,
-                    weather_conditions_3h,
-                    average_temperature,
-                    feels_like_3h,
-                    humidity_3h,
-                    max_temperature,
-                    min_temperature,
-                    precipitation_chance_3h,
-                    wind_speed_3h
-                } = current;
+            const today = new Date().toLocaleDateString();
 
-                acc[date] = Object.entries(temperature_3h).map(([hour, temp]) => ({
-                    hour,
-                    date,
-                    temp,
-                    condition: weather_conditions_3h[hour],
-                    windSpeed: wind_speed_3h[hour],
-                    feelsLike: feels_like_3h[hour],
-                    humidity: humidity_3h[hour],
-                    precipitation: precipitation_chance_3h[hour],
-                    maxTemperature: max_temperature,
-                    minTemperature: min_temperature,
-                    averageTemperature: average_temperature
-                }));
+            return data.reduce((acc, current) => {
+                const { date } = current;
+
+                if (date !== today) {
+                    const {
+                        temperature_3h,
+                        weather_conditions_3h,
+                        average_temperature,
+                        feels_like_3h,
+                        humidity_3h,
+                        max_temperature,
+                        min_temperature,
+                        precipitation_chance_3h,
+                        wind_speed_3h
+                    } = current;
+
+                    acc[date] = Object.entries(temperature_3h).map(([hour, temp]) => ({
+                        hour,
+                        date,
+                        temp,
+                        condition: weather_conditions_3h[hour],
+                        windSpeed: wind_speed_3h[hour],
+                        feelsLike: feels_like_3h[hour],
+                        humidity: humidity_3h[hour],
+                        precipitation: precipitation_chance_3h[hour],
+                        maxTemperature: max_temperature,
+                        minTemperature: min_temperature,
+                        averageTemperature: average_temperature
+                    }));
+                }
                 return acc;
             }, {});
         }
@@ -71,7 +81,7 @@ const WeeklyWeather = ({ forecast }) => {
                 const weatherIcon =
                     dailyData[0].condition || dailyData[0].weather?.[0]?.icon;
                 const description =
-                    dailyData[0].description || dailyData[0].weather?.[0]?.description;
+                    dailyData[0].description || dailyData[0].weather?.[0]?.description || dailyData[0].condition;
 
                 return (
                     <div

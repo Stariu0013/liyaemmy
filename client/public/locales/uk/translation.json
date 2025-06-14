@@ -35,5 +35,6 @@
   "notFoundHomeLink": "Перейти на головну сторінку",
   "noDataAvailable": "Немає даних за цю дату",
   "weatherDetailsFor": "Погодні умови для {{date}}",
-  "weather": "Погода"
+  "weather": "Погода",
+  "invalidCity": "Введіть корректну назву міста"
 }
