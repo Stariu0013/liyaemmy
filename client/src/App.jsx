@@ -7,6 +7,7 @@ import {useTranslation} from "react-i18next";
 import {Route, Routes} from "react-router-dom";
 import WeatherDetails from "./pages/WeatherDetails/WeatherDetails.jsx";
 import {WeatherContent} from "./pages/WeatherContent/WeatherContent.jsx";
+import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.jsx";
 
 function App() {
     const {t, i18n} = useTranslation();
@@ -32,7 +33,7 @@ function App() {
             setIsWeeklyDataLoading(true);
             try {
                 const res = await axios.get(
-                    `https://liyaemmy.onrender.com/weather-forecast`
+                    `http://localhost:5125/weather-forecast`
                 );
 
                 if (res.status === 200) {
@@ -57,9 +58,13 @@ function App() {
     }, [city]);
 
     const toggleTheme = () => {
-        setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+        setTheme((prevTheme) => {
+            const newTheme = prevTheme === "light" ? "dark" : "light";
 
-        localStorage.setItem("theme", theme);
+            localStorage.setItem("theme", newTheme);
+
+            return newTheme;
+        });
 
         if (theme === "light") {
             document.documentElement.classList.add('dark');
@@ -80,7 +85,7 @@ function App() {
         setWeather(null);
         try {
             const response = await axios.get(
-                `https://liyaemmy.onrender.com/weather/${city}`
+                `http://localhost:5125/weather/${city}`
             );
             if (response.status === 200 && response.data) {
                 const data = response.data;
@@ -117,7 +122,7 @@ function App() {
         setForecast(null);
         try {
             const response = await axios.get(
-                `https://liyaemmy.onrender.com/forecast-5days/${city}`
+                `http://localhost:5125/forecast-5days/${city}`
             );
             if (response.status === 200 && response.data) {
                 const extractedForecast = response.data.forecast.map((entry) => ({
@@ -182,7 +187,8 @@ function App() {
             <Routes>
                 <Route path="/" element={<WeatherContent isWeeklyDataLoading={isWeeklyDataLoading} weather={weather} isLoading={isLoading} error={error}
                                                          forecast={forecast} activeTab={activeTab}/>}/>
-                <Route path="/weather-details/:date" element={<WeatherDetails/>}/>
+                <Route path="/weather-details/:date" element={<WeatherDetails />}/>
+                <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </div>
     );

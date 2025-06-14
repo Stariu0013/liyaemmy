@@ -4,12 +4,14 @@ import styles from "../WeatherDetails/WeatherDetails.module.scss";
 import Slider from "react-slick";
 import getWeatherIcon from "../../helpers/getWeatherIcon.js";
 import { t } from "i18next";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const sliderSettings = {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: 2,
     slidesToScroll: 1,
     responsive: [
         {
@@ -28,7 +30,6 @@ const sliderSettings = {
         },
     ],
 };
-
 
 export const WeatherContent = ({ weather, isLoading, error, forecast, activeTab, isWeeklyDataLoading }) => {
     const renderWeatherDetails = (weather) => {
@@ -52,14 +53,16 @@ export const WeatherContent = ({ weather, isLoading, error, forecast, activeTab,
 
         return (
             <div className={`${styles.weatherDetails} ${styles.fullWidthBlock}`}>
-                <h3>{t("averageTodayWeather", { city: weather.name })}</h3>
-                <p className={styles.temperature}>{t("averageTemperature", { value: Math.floor(avgTemp) })}</p>
-                <p>{t("feelsLike", { value: Math.floor(avgFeelsLike) })}</p>
-                <p>{t("humidity", { value: Math.floor(avgHumidity) })}</p>
-                <p>{t("windSpeed", { value: Math.floor(avgWindSpeed) })}</p>
-                <p>{t("precipitationProbability", { value: `${(avgPrecipitation * 100).toFixed(2)}%` })}</p>
+                <div className='p-20'>
+                    <h3>{t("averageTodayWeather", { city: weather.name })}</h3>
+                    <p className={styles.temperature}>{t("averageTemperature", { value: Math.floor(avgTemp) })}</p>
+                    <p>{t("feelsLike", { value: Math.floor(avgFeelsLike) })}</p>
+                    <p>{t("humidity", { value: Math.floor(avgHumidity) })}</p>
+                    <p>{t("windSpeed", { value: Math.floor(avgWindSpeed) })}</p>
+                    <p>{t("precipitationProbability", { value: `${(avgPrecipitation * 100).toFixed(2)}%` })}</p>
 
-                <h3>{t("hourlyForecast")}</h3>
+                    <h3>{t("hourlyForecast")}</h3>
+                </div>
                 <Slider {...sliderSettings}>
                     {weather.today.map((entry, index) => (
                         <div key={index} className={styles.forecastCard}>
@@ -82,7 +85,6 @@ export const WeatherContent = ({ weather, isLoading, error, forecast, activeTab,
 
     return (
         <div className="tabs-content-wrapper">
-            {/* Adjust tab content height dynamically using the activeTab */}
             <div className={`content ${activeTab === "today" ? "active" : ""}`}>
                 {isLoading && <div className="loading">{t("Daily data is loading")}</div>}
                 {error && <div className="error">{error}</div>}

@@ -37,7 +37,73 @@
     }
 
     .forecastCard {
-        width: 200px !important;
+        display: flex;
+        flex-direction: column;
+        width: 200px;
+        text-align: center;
+    }
+
+    @media (max-width: 1024px) {
+        padding: 15px;
+        font-size: 13px;
+
+        h3 {
+            font-size: 20px;
+        }
+
+        p {
+            font-size: 1rem;
+        }
+
+        img {
+            width: 130px;
+            height: 130px;
+        }
+
+        .forecastCard {
+            width: 180px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        padding: 10px;
+        font-size: 12px;
+
+        h3 {
+            font-size: 18px;
+        }
+
+        p {
+            font-size: 0.9rem;
+        }
+
+        img {
+            width: 120px;
+            height: 120px;
+        }
+
+        .forecastCard {
+            width: 150px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        h3 {
+            font-size: 16px;
+        }
+
+        p {
+            font-size: 0.8rem;
+        }
+
+        img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .forecastCard {
+            width: 120px;
+        }
     }
 }
 
