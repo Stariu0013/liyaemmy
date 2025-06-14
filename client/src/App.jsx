@@ -11,7 +11,7 @@ import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.jsx";
 
 function App() {
     const {t, i18n} = useTranslation();
-    const [city, setCity] = useState("Kyiv");
+    const [city, setCity] = useState( localStorage.getItem('city') || "Kyiv");
     const [weather, setWeather] = useState(null);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -58,7 +58,7 @@ function App() {
         setWeather(null);
         try {
             const response = await axios.get(
-                `http://localhost:5125/weather/${city}`
+                `https://liyaemmy.onrender.com/weather/${city}`
             );
 
             if (response.status === 200 && response.data) {
@@ -96,7 +96,7 @@ function App() {
         setIsWeeklyDataLoading(true);
         try {
             const res = await axios.get(
-                `http://localhost:5125/weather-forecast`
+                `https://liyaemmy.onrender.com/weather-forecast`
             );
             if (res.status === 200) {
                 setForecast(res.data.forecasts);
@@ -115,7 +115,7 @@ function App() {
         setForecast(null);
         try {
             const response = await axios.get(
-                `http://localhost:5125/forecast-5days/${city}`
+                `https://liyaemmy.onrender.com/forecast-5days/${city}`
             );
             if (response.status === 200 && response.data) {
                 const extractedForecast = response.data.forecast.map((entry) => ({
@@ -152,6 +152,10 @@ function App() {
                 await fetchWeather();
                 await fetchForecast();
             }
+
+            console.log(city);
+
+            localStorage.setItem('city', city);
         }
 
         handleForecast();
