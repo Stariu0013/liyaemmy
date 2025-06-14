@@ -315,7 +315,7 @@ button:active {
 .error {
     font-size: 1.2rem;
     font-weight: bold;
-    color: #ffb3b3;
+    color: var(--text-color);
 }
 .navbar {
     padding: 10px 20px;

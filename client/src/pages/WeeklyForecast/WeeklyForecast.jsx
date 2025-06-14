@@ -8,9 +8,7 @@ const WeeklyWeather = ({ forecast }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
 
-    // Identify the format of forecast data and transform it to a consistent format
     const normalizeForecastData = (data) => {
-        // CASE 1: Original format (forecast array with "dt" timestamps)
         if (data && Array.isArray(data) && data[0]?.dt) {
             return data.reduce((acc, current) => {
                 const date = new Date(current.dt * 1000).toLocaleDateString();
@@ -20,43 +18,56 @@ const WeeklyWeather = ({ forecast }) => {
             }, {});
         }
 
-        // CASE 2: Second format (formatted with `forecasts`, `temperature_3h`, etc.)
         if (data && Array.isArray(data)) {
             return data.reduce((acc, current) => {
-                const { date, temperature_3h, weather_conditions_3h } = current;
+                const {
+                    date,
+                    temperature_3h,
+                    weather_conditions_3h,
+                    average_temperature,
+                    feels_like_3h,
+                    humidity_3h,
+                    max_temperature,
+                    min_temperature,
+                    precipitation_chance_3h,
+                    wind_speed_3h
+                } = current;
+
                 acc[date] = Object.entries(temperature_3h).map(([hour, temp]) => ({
                     hour,
                     date,
                     temp,
                     condition: weather_conditions_3h[hour],
+                    windSpeed: wind_speed_3h[hour],
+                    feelsLike: feels_like_3h[hour],
+                    humidity: humidity_3h[hour],
+                    precipitation: precipitation_chance_3h[hour],
+                    maxTemperature: max_temperature,
+                    minTemperature: min_temperature,
+                    averageTemperature: average_temperature
                 }));
                 return acc;
             }, {});
         }
 
-        // Throw an error if an unrecognized format is received
         throw new Error("Forecast data format is not recognized");
     };
 
-    // Normalize data for consistent grouping
     const groupedForecast = normalizeForecastData(forecast);
 
-    // Handle navigation to the detailed weather page
     const handleCardClick = (date, dailyData) => {
         navigate(`/weather-details/${encodeURIComponent(date)}`, {
-            state: { date, dailyData }, // Pass all data through the 'state'
+            state: { date, dailyData },
         });
     };
 
     return (
         <div className={styles.weeklyWeather}>
             {Object.entries(groupedForecast).map(([date, dailyData], index) => {
-                // For CASE 2: Calculate the average temperature from the normalized data
                 const avgTemp =
                     dailyData.reduce((sum, entry) => sum + (entry.temp || entry.main.temp), 0) /
                     dailyData.length;
 
-                // For CASE 2, conditionally handle the weatherIcon for the first entry
                 const weatherIcon =
                     dailyData[0].condition || dailyData[0].weather?.[0]?.icon;
                 const description =
@@ -66,7 +77,7 @@ const WeeklyWeather = ({ forecast }) => {
                     <div
                         key={index}
                         className={styles.weatherCard}
-                        onClick={() => handleCardClick(date, dailyData)} // Pass data on click
+                        onClick={() => handleCardClick(date, dailyData)}
                         style={{ cursor: "pointer" }}
                     >
                         <h4>{t("day", { date })}</h4>

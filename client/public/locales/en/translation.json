@@ -32,5 +32,8 @@
   "precipitationProbability": "Precipitation chance: {{value}}",
   "notFoundTitle": "Page Not Found",
   "notFoundMessage": "Sorry, the page you are looking for does not exist.",
-  "notFoundHomeLink": "Go to Homepage"
+  "notFoundHomeLink": "Go to Homepage",
+  "noDataAvailable": "No data available for this date.",
+  "weatherDetailsFor": "Weather Details for {{date}}",
+  "weather": "Weather"
 }

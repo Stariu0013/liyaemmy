@@ -29,8 +29,11 @@
   "Weekly data is loading": "Тижневі дані завантажуються",
   "minTemperature": "Мінімальна температура {{value}}°C",
   "maxTemperature": "Максимальна температура {{value}}°C",
-  "precipitationProbability": "Ймовірність опадів {{value}}",
+  "precipitationProbability": "Ймовірність опадів: {{value}}",
   "notFoundTitle": "Сторінку не знайдено",
   "notFoundMessage": "Вибачте, сторінка, яку ви шукаєте не існує",
-  "notFoundHomeLink": "Перейти на головну сторінку"
+  "notFoundHomeLink": "Перейти на головну сторінку",
+  "noDataAvailable": "Немає даних за цю дату",
+  "weatherDetailsFor": "Погодні умови для {{date}}",
+  "weather": "Погода"
 }

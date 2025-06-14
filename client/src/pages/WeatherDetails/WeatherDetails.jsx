@@ -1,16 +1,24 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import Slider from "react-slick"; // Import react-slick for the slider
-import "slick-carousel/slick/slick.css"; // Slick Carousel styles
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import styles from "./WeatherDetails.module.scss"; // Import SCSS module
+import { useTranslation } from "react-i18next";
+import styles from "./WeatherDetails.module.scss";
 import getWeatherIcon, { getWeatherIconForHourAndCondition } from "../../helpers/getWeatherIcon.js";
+import {t} from "i18next";
 
 const WeatherDetails = () => {
     const location = useLocation();
     const { date, dailyData } = location.state || {};
+    const { t } = useTranslation();
+
+    console.log({
+        dailyData
+    });
+
     if (!date || !dailyData) {
-        return <p>No data available for this date.</p>;
+        return <p>{t("noDataAvailable")}</p>;
     }
 
     const isFirstCase = dailyData[0]?.weather && dailyData[0]?.main;
@@ -26,14 +34,14 @@ const WeatherDetails = () => {
             {
                 breakpoint: 1024, // For screens smaller than 1024px (e.g., tablets)
                 settings: {
-                    slidesToShow: 2, // Show 2 slides
-                    slidesToScroll: 1, // Scroll 1 slide at a time
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
                 },
             },
             {
                 breakpoint: 768, // For screens smaller than 768px (e.g., phones in landscape)
                 settings: {
-                    slidesToShow: 1, // Show 1 slide
+                    slidesToShow: 1,
                     slidesToScroll: 1,
                 },
             },
@@ -45,12 +53,11 @@ const WeatherDetails = () => {
                 },
             },
         ],
-
-        };
+    };
 
     return (
         <div className={styles.weatherDetails}>
-            <h1>Weather Details for {date.replaceAll('-', '.')}</h1>
+            <h1>{t("weatherDetailsFor", { date: date.replaceAll("-", ".") })}</h1>
             {isFirstCase && (
                 <>
                     <div className={styles.fullWidthBlock}>
@@ -59,32 +66,32 @@ const WeatherDetails = () => {
                             alt={dailyData[0].weather[0].description}
                         />
                         <p className="bold-text">
-                            Temperature: {Math.floor(dailyData[0].main.temp)}°C
+                            {t("temperature", {value: Math.floor(dailyData[0].main.temp)})}
                         </p>
-                        <p>Feels Like: {Math.floor(dailyData[0].main.feels_like)}°C</p>
+                        <p>{t("feelsLike", {value: Math.floor(dailyData[0].main.feels_like) })}</p>
                         <p>
-                            Weather: <span className={styles.highlight}>{dailyData[0].weather[0].description}</span>
+                            {t("weather")}: <span className={styles.highlight}>{dailyData[0].weather[0].description}</span>
                         </p>
                     </div>
                     <Slider {...sliderSettings}>
                         {dailyData.map((entry, index) => (
                             <div key={index} className={styles.fullWidthBlock}>
                                 <p>
-                                    <strong>Time:</strong>{" "}
-                                    {new Date(entry.dt * 1000).toLocaleTimeString()}
+                                    <strong>{t("time", {time: new Date(entry.dt * 1000).toLocaleTimeString() })}:</strong>{" "}
+
                                 </p>
                                 <img
                                     src={getWeatherIcon(entry.weather[0].icon)}
                                     alt={entry.weather[0].description}
                                 />
                                 <p>
-                                    <strong>Temperature:</strong> {Math.floor(entry.main.temp)}°C
+                                    <strong>{t("temperature", {value: Math.floor(entry.main.temp)})}:</strong>°C
                                 </p>
                                 <p>
-                                    <strong>Feels Like:</strong> {Math.floor(entry.main.feels_like)}°C
+                                    <strong>{t("feelsLike", {value: Math.floor(entry.main.feels_like)})}:</strong>°C
                                 </p>
                                 <p>
-                                    <strong>Weather:</strong>{" "}
+                                    <strong>{t("weather")}:</strong>{" "}
                                     <span className={styles.highlight}>{entry.weather[0].description}</span>
                                 </p>
                             </div>
@@ -95,9 +102,18 @@ const WeatherDetails = () => {
             {isSecondCase && (
                 <>
                     <div className={styles.fullWidthBlock}>
-                        <p className="bold-text">Temperature: {Math.floor(dailyData[0].temp)}°C</p>
+                        <p className="bold-text">{t("temperature", {value: Math.floor(dailyData[0].temp)})}</p>
                         <p className="bold-text">
-                            Condition: <span className={styles.highlight}>{dailyData[0].condition}</span>
+                            {t("conditions", {description: dailyData[0].condition})}
+                        </p>
+                        <p className="bold-text">
+                            {t("humidity", { value: dailyData[0].humidity })}
+                        </p>
+                        <p className="bold-text">
+                            {t("windSpeed", { value: dailyData[0].windSpeed })}
+                        </p>
+                        <p className="bold-text">
+                            {t("precipitationProbability", { value: `${dailyData[0].precipitation}%` })}
                         </p>
                         <img
                             src={getWeatherIconForHourAndCondition(dailyData[0].hour, dailyData[0].condition)}
@@ -112,13 +128,22 @@ const WeatherDetails = () => {
                                     alt={"Weather Icon"}
                                 />
                                 <p>
-                                    <strong>Time:</strong> {entry.hour}:00
+                                    <strong>{t("time", {time: entry.hour})}:00</strong>
                                 </p>
                                 <p className={styles.temperature}>
-                                    <strong>Temperature:</strong> {entry.temp}°C
+                                    <strong>{t("temperature", {value: entry.temp})}</strong>
                                 </p>
                                 <p>
-                                    <strong>Condition:</strong> {entry.condition}
+                                    <strong>{t("conditions", { description: entry.condition })}</strong>
+                                </p>
+                                <p>
+                                    <strong>{t("humidity", { value: entry.humidity })}</strong>
+                                </p>
+                                <p>
+                                    <strong>{t("windSpeed", { value: entry.windSpeed })}</strong>
+                                </p>
+                                <p>
+                                    <strong>{t("precipitationProbability", { value: `${entry.precipitation}%` })}</strong>
                                 </p>
                             </div>
                         ))}

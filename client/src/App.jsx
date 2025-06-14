@@ -4,7 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from "axios";
 import {useTranslation} from "react-i18next";
-import {Route, Routes} from "react-router-dom";
+import {Route, Routes, useNavigate} from "react-router-dom";
 import WeatherDetails from "./pages/WeatherDetails/WeatherDetails.jsx";
 import {WeatherContent} from "./pages/WeatherContent/WeatherContent.jsx";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.jsx";
@@ -19,6 +19,7 @@ function App() {
     const [theme, setTheme] = useState("light");
     const [activeTab, setActiveTab] = useState("today");
     const [forecast, setForecast] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const activeTheme = localStorage.getItem("theme") || "dark";
@@ -26,36 +27,8 @@ function App() {
         document.documentElement.classList.add(activeTheme);
 
         fetchWeather();
+        fetchDataForKiev();
     }, []);
-
-    useEffect(() => {
-        async function fetchDataForKiev() {
-            setIsWeeklyDataLoading(true);
-            try {
-                const res = await axios.get(
-                    `https://liyaemmy.onrender.com/weather-forecast`
-                );
-
-                if (res.status === 200) {
-                    setForecast(res.data.forecasts);
-                }
-            } catch (err) {
-                setError(t("error") + ": " + (err.message || t("unknownError")));
-            } finally {
-                setIsWeeklyDataLoading(false);
-            }
-        }
-
-        async function handleForecast() {
-            if (city.toLowerCase() === "kyiv") {
-                await fetchDataForKiev();
-            } else {
-                await fetchForecast();
-            }
-        }
-
-        handleForecast();
-    }, [city]);
 
     const toggleTheme = () => {
         setTheme((prevTheme) => {
@@ -85,8 +58,9 @@ function App() {
         setWeather(null);
         try {
             const response = await axios.get(
-                `https://liyaemmy.onrender.com/weather/${city}`
+                `http://localhost:5125/weather/${city}`
             );
+
             if (response.status === 200 && response.data) {
                 const data = response.data;
                 const extractedWeather = {
@@ -111,18 +85,37 @@ function App() {
             }
         } catch (err) {
             console.error(err);
+            setWeather(null);
             setError(t("error") + ": " + (err.message || t("unknownError")));
         } finally {
             setIsLoading(false);
         }
     };
+
+    async function fetchDataForKiev() {
+        setIsWeeklyDataLoading(true);
+        try {
+            const res = await axios.get(
+                `http://localhost:5125/weather-forecast`
+            );
+            if (res.status === 200) {
+                setForecast(res.data.forecasts);
+            }
+        } catch (err) {
+            setWeather(null);
+            setError(t("error") + ": " + (err.message || t("unknownError")));
+        } finally {
+            setIsWeeklyDataLoading(false);
+        }
+    }
+
     const fetchForecast = async () => {
         setIsLoading(true);
         setError(null);
         setForecast(null);
         try {
             const response = await axios.get(
-                `https://liyaemmy.onrender.com/forecast-5days/${city}`
+                `http://localhost:5125/forecast-5days/${city}`
             );
             if (response.status === 200 && response.data) {
                 const extractedForecast = response.data.forecast.map((entry) => ({
@@ -136,11 +129,31 @@ function App() {
             }
         } catch (err) {
             console.error(err);
+            setForecast(null);
+            setWeather(null);
             setError(t("error") + ": " + (err.message || t("unknownError")));
         } finally {
             setIsLoading(false);
         }
     };
+    const handleSearch = () => {
+        async function handleForecast() {
+            if (city.toLowerCase() === "kyiv") {
+                await fetchWeather();
+                await fetchDataForKiev();
+            } else {
+                await fetchWeather();
+                await fetchForecast();
+            }
+        }
+
+        handleForecast();
+    };
+
+    console.log({
+        weather,
+        forecast
+    });
 
     return (
         <div className={`app ${theme}`}>
@@ -166,19 +179,29 @@ function App() {
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                 />
-                <button onClick={fetchWeather}>{t("searchButton")}</button>
+                <button onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        handleSearch();
+                    }
+                }} onClick={handleSearch}>{t("searchButton")}</button>
             </div>
 
             <div className="tabs">
                 <button
                     className={activeTab === "today" ? "active-tab" : ""}
-                    onClick={() => setActiveTab("today")}
+                    onClick={() => {
+                        setActiveTab("today")
+                        navigate("/");
+                    }}
                 >
                     {t("Today")}
                 </button>
                 <button
                     className={activeTab === "weekly" ? "active-tab" : ""}
-                    onClick={() => setActiveTab("weekly")}
+                    onClick={() => {
+                        setActiveTab("weekly");
+                        navigate("/");
+                    }}
                 >
                     {t("Weekly")}
                 </button>
